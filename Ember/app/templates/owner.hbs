@@ -1,0 +1,33 @@
+{{page-title "Owner"}}
+
+<div class="menu">
+    {{!-- <br><br><br><br><br><div class="navigator" {{action 'getBuilding'}}>My Buildings</div><br>
+    <div class="navigator" {{action 'editFloor'}}>Add/Edit floor</div><br>
+    <div class="navigator" {{action 'editBlock'}}>Add/Edit Block</div><br>
+    <div class="navigator" {{action 'viewFloors'}}>View floors</div><br>
+    <div class="navigator" {{action 'editBlock'}}>Add/Edit Block</div><br> --}}
+</div>
+
+<div class="contents">
+    {{#each this.session.buildings as |building|}}
+        <Buildings @building={{building}}></Buildings>    
+    {{/each}}
+    <div class="building">
+        <center>
+            <h2>Add building</h2>
+            <input type="text" id="buildingName" placeholder="Building name"><br><br>
+
+            <input type="text" id="streetAddress" placeholder="Street Addrress"><br><br>
+
+            <input type="text" id="area" placeholder="Area"><br><br>
+
+            <input type="number" id="pincode" placeholder="Pincode"><br><br>
+
+            <input type="number" id="phone" placeholder="Phone number"><br><br>
+
+            <input type="text" id="description" placeholder="Description"><br><br>
+
+            <button type="button" {{action 'addBuilding'}}>Add</button>
+        </center>
+    </div>
+</div>

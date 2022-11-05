@@ -1,0 +1,9 @@
+{{page-title "Customer"}}
+
+<CustomerComponent>
+     <div class="contents">
+        {{#each this.model as |building|}}
+            <Buildings @building={{building}}></Buildings>    
+        {{/each}}
+    </div>
+</CustomerComponent>

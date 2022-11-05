@@ -1,0 +1,21 @@
+{{page-title "CreateAccount"}}
+
+<div class="myBody"><br>
+    <LinkTo style="color:white; text-decoration: none;" @route="log-in">Log in</LinkTo>
+    <center>
+        <h3 style="color:white">Create account</h3><br><br>
+        <div class="container" ><br>
+            <input type="text" id="logInName" placeholder="Login name"><br><br>
+            <input type="text" id="firstName" placeholder="First name"><br><br>
+            <input type="text" id="middleName" placeholder="Middle name"><br><br>
+            <input type="text" id="lastName" placeholder="Last name"><br><br>
+            <select class="roleOption" id="role">
+                <option value="customer">Role : Customer</option>
+                <option value="owner">Role : Owner</option>
+            </select><br><br>
+            <input type="password" id="password" placeholder="Password"><br><br>
+            <input type="password" id="cPassword" placeholder="Conform password"><br><br>
+        </div>
+        <button id="createButton" type="button" {{action 'createAccount'}}>Create</button>
+    </center>
+</div>

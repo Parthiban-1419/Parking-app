@@ -1,0 +1,14 @@
+{{page-title "Log-in"}}
+
+<div class="myBody">
+    <center>
+        <div class="container"><br><br><br><br><br>
+            <input type="text" id="userId" placeholder="Login Name"><br><br>
+            <input type="password" id="password" placeholder="Password"><br><br>
+            <button type="button" {{action 'logIn' preventDefault=false}}>Sign-in</button><br><br>
+
+            Don't have an account? <LinkTo @route="create-account">Sign up</LinkTo>
+        </div>
+    </center>
+</div>
+

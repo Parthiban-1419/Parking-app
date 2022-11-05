@@ -1,0 +1,5 @@
+{{yield}}
+
+{{#if this.session.isAuthenticated}}
+    <button type="button" class="logOut" {{action 'logOut'}}>Log out</button>
+{{/if}}

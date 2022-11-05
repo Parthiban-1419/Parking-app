@@ -1,0 +1,22 @@
+{{page-title "MainPage"}}
+
+<CustomerComponent>
+</CustomerComponent>
+
+<div class="contents">
+        <center><br><br>
+            <div class="vehicleImages">
+                <img id="bikeImage" class="image" src="/images/bike.png" {{action (fn this.getData 'bike')}}>
+                <img id="carImage" class="image" src="/images/car2.png" {{action (fn this.getData 'car')}}>
+            </div><br>
+            <select class="select" id="floor" {{on 'change' this.changeTable}}>
+            </select><br><br><br><br>
+
+            <table class="infoTable">
+                <tr><th><div class="Available" id="info"></div></th> : Available </tr>
+                <tr><th><div class="Unavailable" id="info"></div></th> : Unavailable</tr>
+            </table>
+
+            <table id="myTable"></table>  
+        </center>
+    </div>
