@@ -1,0 +1,15 @@
+{{yield}}
+
+<div class="row" rowId={{@row.row_id}} rowIndex={{@index}}>
+    {{#each this.blocks as |block index|}}
+            <BlockComponent @block={{block}} @index={{index}}></BlockComponent><div class="place-spacing"></div><br>
+    {{/each}}
+    {{#if this.isOwner}}
+        <div class="block" {{action this.addBlock @row.row_id}}>
+            <center>
+                <span>Add new block</span><br>
+                <i class="fa fa-arrow-left"></i>
+            </center>
+        </div>
+    {{/if}}
+</div>

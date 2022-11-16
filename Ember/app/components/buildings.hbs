@@ -1,6 +1,6 @@
 {{yield}}
 
-<div class="building" {{action (fn this.getFloors @building.building_name)}}>
+<div class="building" {{action (fn this.selectBuilding @building.building_name)}}>
     <center><h2>{{@building.building_name}}</h2></center>
         <h3>Descreption : </h3>
         <p>{{@building.description}}</p>
@@ -15,10 +15,4 @@
                 {{vehicle.vehicle_type}} : Rs.{{vehicle.price_per_hour}} per hour<br>
             {{/each}}
         </p>
-        {{!-- {{#if this.isOwner}}
-            <div class="editor">
-                <i class="fa fa-edit"></i>
-                <i class="fa fa-trash"></i>
-            </div>
-        {{/if}} --}}
 </div>

@@ -43,11 +43,33 @@ public class Data extends HttpServlet{
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         out = response.getWriter();
+        JSONObject jBuilding = new JSONObject();
+        JSONArray prices = new JSONArray();
+
         try {
-            if (request.getParameter("action").equals("getData"))
-                getData(request.getParameter("buildingName"), request.getParameter("vehicleType"));
+            if (request.getParameter("action").equals("getData")) {
+                Criteria criteria = new Criteria(new Column("VehiclePrice", "BUILDING_NAME"), request.getParameter("buildingName"), QueryConstants.EQUAL);
+                DataObject dataObject = DataAccess.get("VehiclePrice", criteria);
+
+//                SortColumn sortPK = new SortColumn("VehiclePrice", "BUILDING_NAME", true);
+//                dataObject.sortRows("VehiclePrice", sortPK);
+
+                System.out.println(dataObject);
+
+                Row row ;
+                Iterator i = dataObject.getRows("VehiclePrice");
+                while(i.hasNext()){
+                    row = (Row)i.next();
+                    prices.add(row.getAsJSON());
+                    jBuilding.put(row.getString("VEHICLE_TYPE"), getData(request.getParameter("buildingName"), row.getString("VEHICLE_TYPE")));
+                }
+                jBuilding.put("buildingName", request.getParameter("buildingName"));
+                jBuilding.put("vehiclePrices", prices);
+                out.print(jBuilding);
+            }
             else if (request.getParameter("action").equals("bookPlace")) {
-                bookPlace(request.getParameter("placeId"), request.getParameter("vehicleNumber"), request.getParameter("name"));
+                Place place = new Place();
+                place.bookPlace(request.getParameter("placeId"), request.getParameter("vehicleNumber"), request.getParameter("name"));
                 out.print("Place booked successfully");
             }
         }
@@ -59,11 +81,10 @@ public class Data extends HttpServlet{
         }
     }
 
-    public void getData(String buildingName, String vehicleType){
-
-        JSONObject json, jBlock;
-        JSONArray jArray = new JSONArray();
+    public JSONArray getData(String buildingName, String vehicleType){
         Criteria criteria = new Criteria(new Column("Floor", "VEHICLE_TYPE"), vehicleType, QueryConstants.EQUAL).and(new Criteria(new Column("Floor", "BUILDING_NAME"), buildingName, QueryConstants.EQUAL));
+        JSONObject floor, row, block;
+        JSONArray floorTable , floorArr = new JSONArray(), rowTable, rowArr, bolckTable, blockArr;
 
         try {
 //            RelationalAPI rAPI = RelationalAPI.getInstance();
@@ -93,54 +114,69 @@ public class Data extends HttpServlet{
 //                jArray.add(json);
 //            }
 //
-            JSONArray floorArray = getFromDB("Floor", criteria), blockArray, temp;
+            System.out.println("buildingName : " + buildingName + ", " + "vehicleType : " + vehicleType);
+            floorTable = getFromDB("Floor", criteria);
+            for(Object object : floorTable) {
+                floor = new JSONObject();
+                floor.put("floor_id", ((JSONObject) object).get("floor_id"));
+                floor.put("floor", ((JSONObject) object).get("floor"));
+                floor.put("vehicleType", ((JSONObject) object).get("vehicle_type"));
+                criteria = new Criteria(new Column("FloorRow", "FLOOR_ID"), ((JSONObject) object).get("floor_id"), QueryConstants.EQUAL);
+                rowTable = getFromDB("FloorRow", criteria);
+                rowArr = new JSONArray();
+                for(Object rowObject: rowTable){
+                    row = new JSONObject();
+                    row.put("row_id", ((JSONObject) rowObject).get("row_id"));
+                    row.put("row", ((JSONObject) rowObject).get("row"));
+                    criteria = new Criteria(new Column("Block", "ROW_ID"), ((JSONObject) rowObject).get("row_id"), QueryConstants.EQUAL);
 
-            for(Object object : floorArray){
-                criteria = new Criteria(new Column("Block", "FLOOR_ID"), ((JSONObject) object).get("floor_id"), QueryConstants.EQUAL);
-                json = new JSONObject();
-                json.put("floor", ((JSONObject) object).get("floor"));
-                blockArray = getFromDB("Block", criteria);
-
-                temp = new JSONArray();
-                for(Object ob : blockArray){
-                    criteria = new Criteria(new Column("Place", "BLOCK_ID"), ((JSONObject) ob).get("block_id"), QueryConstants.EQUAL);
-                    jBlock = new JSONObject();
-
-                    jBlock.put("block", ((JSONObject) ob).get("block"));
-                    jBlock.put("places", getFromDB("Place", criteria));
-
-                    temp.add(jBlock);
+                    bolckTable = getFromDB("Block", criteria);
+                    blockArr = new JSONArray();
+                    for(Object blockObject: bolckTable){
+                        block = new JSONObject();
+                        criteria = new Criteria(new Column("Place", "BLOCK_ID"), ((JSONObject) blockObject).get("block_id"), QueryConstants.EQUAL);
+                        block.put("block_id", ((JSONObject) blockObject).get("block_id"));
+                        block.put("block", ((JSONObject) blockObject).get("block"));
+                        block.put("places", getFromDB("Place", criteria));
+                        blockArr.add(block);
+                    }
+                    row.put("blocks", blockArr);
+                    rowArr.add(row);
                 }
-                json.put("blocks", temp);
-
-                jArray.add(json);
+                floor.put("rows", rowArr);
+                floorArr.add(floor);
             }
-
-            out.print(jArray);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
+            floorArr = new JSONArray();
+            floorArr.add(e);
         }
+        return floorArr;
     }
 
     JSONArray getFromDB(String tableName, Criteria criteria) throws DataAccessException {
         Row row ;
         DataObject dataObject;
         JSONArray jArray = new JSONArray();
-
         dataObject = DataAccess.get(tableName, criteria);
+//        if(tableName.equals("Place")) {
+            SortColumn sortPK = new SortColumn("Place", "PLACE_ID", true);
+            dataObject.sortRows("Place", sortPK);
 
-        if(tableName.equals("Place")) {
-            SortColumn sortId = new SortColumn("Place", "PLACE_ID", true);
-            dataObject.sortRows("Place", sortId);
-        }
+            sortPK = new SortColumn("Block", "BLOCK_ID", true);
+            dataObject.sortRows("Block", sortPK);
 
+            sortPK = new SortColumn("Row", "ROW", true);
+            dataObject.sortRows("Row", sortPK);
+
+            sortPK = new SortColumn("Floor", "FLOOR_ID", true);
+            dataObject.sortRows("Floor", sortPK);
+//        }
         Iterator i = dataObject.getRows(tableName);
-
         while(i.hasNext()) {
             row = (Row) i.next();
             jArray.add(row.getAsJSON());
         }
-
         return jArray;
     }
 

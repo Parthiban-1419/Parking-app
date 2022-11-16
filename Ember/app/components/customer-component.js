@@ -7,6 +7,7 @@ export default class CustomerComponentComponent extends Component {
   @service router;
   @service session;
 
+  @tracked vehiclePrices = {};
   @tracked data;
   @tracked bill;
   @tracked isTracked;
@@ -24,6 +25,11 @@ export default class CustomerComponentComponent extends Component {
   getUserDetail() {
     var req = new XMLHttpRequest();
     let self = this;
+
+    for (let i = 0; i < self.session.vehiclePrices.length; i++) {
+      self.vehiclePrices[self.session.vehiclePrices[i].vehicle_type] =
+        self.session.vehiclePrices[i].price_per_hour;
+    }
 
     req.onload = function () {
       console.log(this.responseText);
@@ -63,12 +69,13 @@ export default class CustomerComponentComponent extends Component {
   }
 
   createWindow(index) {
-    var self = this;
+    let self = this;
+
     var bill = parseInt(
-      40 * ((Date.now() - self.data[index].entryTime) / 3600000)
+      self.vehiclePrices[self.data[index].type] *
+        ((Date.now() - self.data[index].entryTime) / 3600000)
     );
 
-    console.log('index : ' + index);
     // $('.trackMenu #' + $('.vehicleInfo').attr('vehicle')).css('background-color', 'rgb(215, 241, 248)').css('border-top-right-radius', '40px').css('border-bottom-right-radius', '40px');
     $('.vehicle')
       .css('background-color', 'rgb(215, 241, 248)')
@@ -84,8 +91,12 @@ export default class CustomerComponentComponent extends Component {
       $('.vehicleInfo').append(
         '<p>Your ' +
           self.data[index].type +
-          ' is parked Floor : ' +
+          ' is parked in<br><br>Building : ' +
+          self.data[index].buildingName +
+          '<br>Floor : ' +
           self.data[index].floor +
+          ', Row : ' +
+          self.data[index].row +
           ', Block : ' +
           self.data[index].block +
           ', Place : ' +
@@ -105,8 +116,15 @@ export default class CustomerComponentComponent extends Component {
           '"><br><br>' +
           '<button id="pay">Pay</button>'
       );
+      if (bill == 0) {
+        $('#accountNumber')
+          .attr('disabled', 'true')
+          .css('background-color', 'white');
+        $('#ifsc').attr('disabled', 'true').css('background-color', 'white');
+        $('#name').attr('disabled', 'true').css('background-color', 'white');
+      }
       $('#pay').click(function () {
-        self.pay();
+        self.pay(self.data[index].placeId);
       });
     }
   }
@@ -122,7 +140,7 @@ export default class CustomerComponentComponent extends Component {
     );
     this.getUserDetail();
     setTimeout(function () {
-      $('.main').css('opacity', '0.5');
+      $('.main').css('opacity', '0.2');
       $('.window').css('display', 'initial');
       if (self.data.length > 0) {
         self.createWindow(0);
@@ -143,7 +161,7 @@ export default class CustomerComponentComponent extends Component {
     );
     this.getUserDetail();
     setTimeout(function () {
-      $('.main').css('opacity', '0.5');
+      $('.main').css('opacity', '0.2');
       $('.window').css('display', 'initial');
       $('.vehicleInfo').html('<br>');
       if (self.data.length > 0) {
@@ -154,15 +172,16 @@ export default class CustomerComponentComponent extends Component {
     }, 1);
   }
 
-
-  pay() {
+  pay(placeId) {
     var req = new XMLHttpRequest();
+    let self = this;
 
     req.onload = function () {
       alert(this.responseText);
       if (this.responseText === 'Paid successfully') {
         $('.window').css('display', 'none');
         $('.main').css('opacity', '1');
+        $('[placeId = ' + placeId + ']').css('class', 'Available');
       }
     };
 
@@ -173,10 +192,10 @@ export default class CustomerComponentComponent extends Component {
         $('#accountNumber').val() +
         '&ifsc=' +
         $('#ifsc').val() +
-        '&name=' + 
+        '&name=' +
         $('#name').val() +
         '&placeId=' +
-        1
+        placeId
     );
   }
 }

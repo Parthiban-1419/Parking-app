@@ -1,6 +1,7 @@
 import com.adventnet.ds.query.Column;
 import com.adventnet.ds.query.Criteria;
 import com.adventnet.ds.query.QueryConstants;
+import com.adventnet.ds.query.SortColumn;
 import com.adventnet.persistence.DataAccess;
 import com.adventnet.persistence.DataAccessException;
 import com.adventnet.persistence.DataObject;
@@ -22,17 +23,23 @@ public class Building extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
         PrintWriter out = response.getWriter();
         JSONObject json;
-        JSONArray jsonArray = new JSONArray(), vehiclePrice = new JSONArray();
+        JSONArray jsonArray = new JSONArray(), vehiclePrice ;
         Iterator i, priceIterator;
         Row row ;
         Criteria criteria = null;
         System.out.println(request.getParameter("role") + " :  " + request.getParameter("name"));
-        if(request.getParameter("role").equals("owner")){
+        if(request.getParameter("role").equals("owner"))
             criteria = new Criteria(new Column("Building", "OWNER_NAME"), request.getParameter("name"), QueryConstants.EQUAL);
-        }
+
 
         try {
             DataObject dataObject = DataAccess.get("Building", criteria);
+
+            if(request.getParameter("sort").equals("name")) {
+                SortColumn sortPK = new SortColumn("Building", "BUILDING_NAME", Boolean.parseBoolean(request.getParameter("mode")));
+                dataObject.sortRows("Building", sortPK);
+            }
+
             System.out.println(dataObject);
             i = dataObject.getRows("Building");
             while(i.hasNext()){
@@ -41,6 +48,7 @@ public class Building extends HttpServlet {
                 json = row.getAsJSON();
 
                 priceIterator = DataAccess.get("VehiclePrice", criteria).getRows("VehiclePrice");
+                vehiclePrice = new JSONArray();
                 while(priceIterator.hasNext()){
                     vehiclePrice.add(((Row)priceIterator.next()).getAsJSON());
                 }

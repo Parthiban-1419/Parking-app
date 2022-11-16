@@ -112,7 +112,7 @@ public class DataBase {
 
     public void putData(String json, String index) throws IOException {
         IndexRequest indexRequest = new IndexRequest(index);
-        indexRequest.id("1");
+//        indexRequest.id("1");
         indexRequest.source(json, XContentType.JSON);
         IndexResponse indexResponse = client.index(indexRequest, RequestOptions.DEFAULT);
 

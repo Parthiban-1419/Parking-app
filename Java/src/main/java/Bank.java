@@ -29,7 +29,8 @@ public class Bank extends HttpServlet {
                 d.addRow(row);
                 DataAccess.add(d);
             }
-            updatePlace(request.getParameter("placeId"));
+            Place place = new Place();
+            place.freePlace(request.getParameter("placeId"));
 
             out.print("Paid successfully");
         }
@@ -39,7 +40,7 @@ public class Bank extends HttpServlet {
         }
     }
 
-    public void updatePlace(String placeId) throws DataAccessException {
+    public void freePlace(String placeId) throws DataAccessException {
         UpdateQuery updateQuery = new UpdateQueryImpl("Place");
         Criteria criteria = new Criteria(new Column("Place", "PLACE_ID"), placeId, QueryConstants.EQUAL);
         updateQuery.setCriteria(criteria);

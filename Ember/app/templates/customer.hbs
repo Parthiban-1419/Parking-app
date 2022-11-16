@@ -1,8 +1,15 @@
 {{page-title "Customer"}}
 
 <CustomerComponent>
+    <div class="top-menu">
+        <div class="filter">
+            <center>Filter name : <i class="fa fa-filter"></i></center>
+        </div>        
+        <i class="fa fa-sort-alpha-asc" mode='true' {{action (fn this.filterData this true)}}></i>
+        <i class="fa fa-sort-alpha-desc" mode='false' {{action (fn this.filterData this false)}}></i>
+    </div>
      <div class="contents">
-        {{#each this.model as |building|}}
+        {{#each this.buildings as |building|}}
             <Buildings @building={{building}}></Buildings>    
         {{/each}}
     </div>

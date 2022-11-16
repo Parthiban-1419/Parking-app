@@ -1,0 +1,18 @@
+{{yield}}
+
+<div class="block" blockIndex = {{@index}}>
+    <div class="blockDescription">
+        Block : {{@block.block}}
+    </div>
+    {{#each this.places as |place index|}}
+        <div class={{place.status}} placeId={{place.place_id}} placeIndex={{index}}>
+            {{place.place}} 
+        </div>
+        <div class="place-spacing"></div>
+    {{/each}}
+    {{#if this.isOwner}}
+        <div class="newPlace" {{action this.addPlace @block.block_id}}>
+            <i class="fa fa-plus"></i>
+        </div>
+    {{/if}}
+</div>

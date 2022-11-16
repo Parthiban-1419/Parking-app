@@ -1,22 +1,53 @@
 {{page-title "MainPage"}}
 
-<CustomerComponent>
-</CustomerComponent>
+{{#if this.isOwner}}
+    <OwnerComponent></OwnerComponent>
+    {{else}}
+        <CustomerComponent></CustomerComponent>
+{{/if}}
+
+<div class="top-menu">
+    <div class="vehicleImages">
+        {{#each this.session.vehiclePrices as |vehicle|}}
+            <img id='{{vehicle.vehicle_type}}Image' class="image" src='/images/{{vehicle.vehicle_type}}.png' {{action (fn this.changeVehicle vehicle.vehicle_type this)}} alt={{vehicle.vehicle_type}}>
+        {{/each}}
+    </div><br><br><br><br>
+    
+    <table class="infoTable">
+        <tr><th><div class="AvailableInfo" id="info"></div></th> : Available </tr>
+        <tr><th><div class="UnavailableInfo" id="info"></div></th> : Unavailable</tr>
+        <tr><th><div class="RestrictedInfo" id="info"></div></th> : Restricted</tr>
+    </table>
+</div>
 
 <div class="contents">
-        <center><br><br>
-            <div class="vehicleImages">
-                <img id="bikeImage" class="image" src="/images/bike.png" {{action (fn this.getData 'bike')}}>
-                <img id="carImage" class="image" src="/images/car2.png" {{action (fn this.getData 'car')}}>
-            </div><br>
-            <select class="select" id="floor" {{on 'change' this.changeTable}}>
-            </select><br><br><br><br>
+    {{#each this.floors as |bike index|}}           {{!-- (get this.datas this.vehicle) --}}    
+        <br><br><br><FloorComponent @floor={{bike}} @index={{index}}></FloorComponent><br><br>
+    {{/each}}
+    {{#if this.isOwner}}
+        <div class="floor" {{action this.addFloor}}><br><br><br>
+            <center>
+                <span>Add new floor</span><br>  
+                <i class="fa fa-arrow-down"></i>
+            </center>
+        </div>
+    {{/if}}
+</div>
 
-            <table class="infoTable">
-                <tr><th><div class="Available" id="info"></div></th> : Available </tr>
-                <tr><th><div class="Unavailable" id="info"></div></th> : Unavailable</tr>
-            </table>
+{{!-- <div class="contents">
+    <center><br><br>
+        <div class="vehicleImages">
+            <img id="bikeImage" class="image" src="/images/bike.png" {{action (fn this.getData 'bike')}}>
+            <img id="carImage" class="image" src="/images/car2.png" {{action (fn this.getData 'car')}}>
+        </div><br>
+        <select class="select" id="floor" {{on 'change' this.changeTable}}>
+        </select><br><br><br><br>
 
-            <table id="myTable"></table>  
-        </center>
-    </div>
+        <table class="infoTable">
+            <tr><th><div class="Available" id="info"></div></th> : Available </tr>
+            <tr><th><div class="Unavailable" id="info"></div></th> : Unavailable</tr>
+        </table>
+
+        <table id="myTable"></table>  
+    </center>
+</div> --}}

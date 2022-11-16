@@ -9,25 +9,37 @@
 </div>
 
 <div class="contents">
-    {{#each this.session.buildings as |building|}}
+    {{#each this.myService.buildings as |building|}}
         <Buildings @building={{building}}></Buildings>    
     {{/each}}
-    <div class="building">
-        <center>
-            <h2>Add building</h2>
-            <input type="text" id="buildingName" placeholder="Building name"><br><br>
 
-            <input type="text" id="streetAddress" placeholder="Street Addrress"><br><br>
+    {{!-- {{#if this.isAdd}} --}}
+        <div class="building" style="opacity: 0.5;">
+            <center>
+                <h2>Add building</h2>
+                <input type="text" id="buildingName" placeholder="Building name"><br><br>
 
-            <input type="text" id="area" placeholder="Area"><br><br>
+                <input type="text" id="streetAddress" placeholder="Street Addrress"><br><br>
 
-            <input type="number" id="pincode" placeholder="Pincode"><br><br>
+                <input type="text" id="area" placeholder="Area"><br><br>
 
-            <input type="number" id="phone" placeholder="Phone number"><br><br>
+                <input type="number" id="pincode" placeholder="Pincode"><br><br>
 
-            <input type="text" id="description" placeholder="Description"><br><br>
+                <input type="number" id="phone" placeholder="Phone number"><br><br>
 
-            <button type="button" {{action 'addBuilding'}}>Add</button>
-        </center>
-    </div>
+                <input type="text" id="description" placeholder="Description"><br><br><hr>
+
+                Vehicle detail : <button type="button" {{action 'addVehicle'}}><i class="fa fa-plus"></i></button><br><br>
+                <div class="vehicles">
+                    <div class="vehicle" id="vehicle1">
+                        <input type="text" id="vehicleType" placeholder="Vehicle type">
+                
+                        <input type="number" id="price" placeholder="price">
+                    </div>
+                </div><br>
+
+                <button type="button" {{action 'addBuilding'}}>Add</button>
+            </center>
+        </div>
+    {{!-- {{/if}} --}}
 </div>

@@ -15,15 +15,17 @@ export default class MainPageRoute extends Route {
   setupController = function (controller) {
     let self = this;
     $(document).ready(function () {
-      $('.main').click(function () {
-        $('.main').css('opacity', '1');
-        $('.window').css('display', 'none');
-        $('#bookButton').click(function () {
-          controller.bookPlace();
-        });
-      });
-      controller.set('buildingName', self.buildingName);
-      controller.getData('bike');
+      // $('.Restricted').click(function(){
+      //   if(self.session.data.authenticated.token.role === 'customer'){
+      //     alert('Restricted place. Unable to book');
+      //   }
+      //   else{
+      //     controller.freePlace($(this));
+      //   }
+      // });
+      $('.image:first').css('background-color', 'aqua');
     });
+    controller.set('buildingName', self.buildingName);
+    controller.getData();
   };
 }

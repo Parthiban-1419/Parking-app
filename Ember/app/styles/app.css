@@ -18,8 +18,11 @@ input{
     height: 30px;
     width: 90px;
     font-size: medium;
+    border: solid;
     border-radius: 10px;
     background-color: antiquewhite;
+    display: table-cell;
+    vertical-align: middle;
 }
 
 .container{
@@ -49,18 +52,68 @@ input{
 }
 
 .menu{
-    width: 15%;
+    width: 190px;
     height: 100%;
     border-right-style: groove;
     background-image: repeating-linear-gradient( skyblue , white, skyblue); 
 }
 
-.contents{
+.top-menu{
     position: absolute;
     top: 0%;
-    margin-left: 15%;
+    margin-left: 190px;
+    border-bottom-style: groove;
     width: 86%;
-    height: 100%;
+    height: 90px;
+    overflow: auto;
+}
+
+.filter{
+    width: 110px;
+    height: 25px;
+    border-radius: 5px;
+    background-color: rgb(219, 236, 250);
+    position: absolute;
+    bottom: 5%;
+    right: 200px;
+}
+
+.filter:hover{
+    background-color: rgb(193, 223, 250);
+}
+
+.fa-sort-alpha-asc{
+    height: 20px;
+    width: 20px;
+    border-radius: 50px;
+    position: absolute;
+    bottom: 7%;
+    right: 170px;
+}
+
+.fa-sort-alpha-asc:hover{
+    background-color: rgb(193, 223, 250);
+}
+
+.fa-sort-alpha-desc{
+    height: 20px;
+    width: 20px;
+    border-radius: 50px;
+    position: absolute;
+    bottom: 7%;
+    right: 140px;
+}
+
+.fa-sort-alpha-desc:hover{
+    background-color: rgb(193, 223, 250);
+}
+
+.contents{
+    position: absolute;
+    top: 90px;
+    margin-left: 190px;
+    width: 86%;
+    height: 80%;
     overflow: auto;
 }
 
@@ -112,9 +165,21 @@ button:hover{
 }
 
 #info{
+    height: 10px;
     border: solid;
     height: 10px;
     width: 10px;
+}
+.AvailableInfo{
+    background-color: aqua;
+}
+
+.UnavailableInfo{
+    background-color: red;
+}
+
+.RestrictedInfo{
+    background-color: yellow;
 }
 
 #myTable{
@@ -126,23 +191,56 @@ button:hover{
 
 .infoTable{
     position: absolute;
-    right: 10%;
-    top: 7%;
+    right: 120px;
+    top: 10px;
 }
 
 .Available{
+    display: table-cell;
+    border-top-style :dotted;
+    border-bottom-style: dashed;
+    border-left-style: solid;
+    border-right-style: solid;
+    padding: 20px;
     background-color: rgb(113, 241, 241);
+    vertical-align: middle;
 }
+
 .Available:hover{
     background-color: rgb(169, 240, 83);
 }
 
 .Unavailable{
+    display: table-cell;
+    border-top-style: dashed;
+    border-bottom-style: dashed;
+    border-left-style: solid;
+    padding: 20px;
     background-color: red;
 }
 
 .selected{
+    display: table-cell;
+    border: solid;
+    padding: 20px;
+    background-color: orange;
+    vertical-align: middle;
+}
+
+.Restricted{
+    display: table-cell;
+    border: solid;
+    padding: 20px;
     background-color: yellow;
+    vertical-align: middle;
+}
+
+#vehicleType{
+    width: 100px;
+}
+
+#price{
+    width: 100px;
 }
 
 #blockRow,td{
@@ -224,7 +322,7 @@ button:hover{
 .vehicleImages{
     position: absolute;
     left: 5%;
-    top: 5%;
+    top: 15px;
 }
 
 
@@ -237,7 +335,7 @@ button:hover{
     width: 40%;
     border-radius: 30px;
     box-shadow: 3px 3px 20px 2px ;
-    margin-top: 4%;
+    margin-top: 1%;
     margin-bottom: 4%;
     overflow: auto;
     margin-left: 28%;
@@ -272,4 +370,78 @@ button:hover{
     position: absolute;
     /* top: 50px;
     left: 58%; */
+}
+
+.floor{
+    width: 80%;
+    /* width: auto; */
+    min-height : 200px;
+    box-shadow: 3px 3px 20px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+    margin-left: 80px;
+    /* display: table-cell; */
+    padding: 20px;
+    overflow: auto;
+}
+
+.row{
+    display: table-row;
+    padding: 20px;
+}
+
+.block{
+    /* width: 40px;
+    height: 30px; */
+    border-radius: 20px;
+    display: table-cell;
+    border: solid;
+    padding: 10px;
+    margin-bottom: 20px;
+    vertical-align: middle;
+}
+
+.place{
+    display: table-cell;
+    border: solid;
+    /* padding: 20px; */
+}
+
+.newPlace{
+    justify-content: center;
+    display: table-cell;
+    border: solid;
+    padding: 20px;
+    vertical-align: middle;
+}
+
+#newRow{
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    display: table;
+}
+span{
+    -webkit-user-select: none;
+    -ms-user-select: none; 
+    user-select: none;
+}
+
+.vehicleType{
+    height: 35px;
+    width: 225px;
+    font-size: medium;
+    border: solid;
+    border-radius: 20px;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.place-spacing{
+    display: table-cell;
+    width: 20px;    
+}
+
+.row-detail{
+    display: table-cell;
 }

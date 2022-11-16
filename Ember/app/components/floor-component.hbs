@@ -1,0 +1,17 @@
+{{yield}}
+
+
+<div class="floor" floorIndex={{@index}}>
+    <div class="floorDetail"><center><div class="select">Floor : {{@floor.floor}}</div></center></div><br>
+    {{#each this.rows as |row index|}}
+        <div class="row-detail">Row : {{row.row}}</div><RowComponent @row={{row}} @index={{index}}></RowComponent><br>
+    {{/each}} 
+    {{#if this.isOwner}}
+        <center>
+            <div class="row" {{action this.addRow @floor.floor_id}}>
+                <span>Add new row</span><br>
+                <i class="fa fa-arrow-down"></i>
+            </div>
+        </center>
+    {{/if}}
+</div>

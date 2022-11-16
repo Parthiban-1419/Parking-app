@@ -19,8 +19,6 @@ public class Amount extends HttpServlet {
     PrintWriter out;
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         out = response.getWriter();
-        JSONArray jsonArray = new JSONArray();
-        Row row;
         Criteria nameCriteria = new Criteria(new Column("Place", "NAME"), request.getParameter("name"), QueryConstants.EQUAL),
                 statusCriteria = new Criteria(new Column("Place", "STATUS"), "Unavailable", QueryConstants.EQUAL);
 
@@ -42,13 +40,13 @@ public class Amount extends HttpServlet {
 //                jsonArray.add(row.getAsJSON());
 //            }
 //            out.print(jsonArray);
-            out.print(demo(nameCriteria.and(statusCriteria)));
+            out.print(getData(nameCriteria.and(statusCriteria)));
         } catch (Exception e) {
             out.print(e);
         }
     }
 
-    public JSONArray demo(Criteria criteria) throws SQLException, QueryConstructionException {
+    public JSONArray getData(Criteria criteria) throws SQLException, QueryConstructionException {
         JSONArray jsonArray = new JSONArray();
         JSONObject json;
 
@@ -58,26 +56,33 @@ public class Amount extends HttpServlet {
 
         ArrayList<Column> colList = new ArrayList<Column>();
 
-        //Adding columns of table 'Place' to list
-        colList.add(Column.getColumn("Place", "PLACE_ID"));
-        colList.add(Column.getColumn("Place", "PLACE"));
-        colList.add(Column.getColumn("Place", "VEHICLE_NUMBER"));
-        colList.add(Column.getColumn("Place", "ENTRY_TIME"));
+        //Adding floor of table 'Floor' to list
+        colList.add(Column.getColumn("Floor", "FLOOR"));
+        colList.add(Column.getColumn("Floor", "FLOOR_ID"));
+        colList.add(Column.getColumn("Floor", "BUILDING_NAME"));
+        colList.add(Column.getColumn("Floor", "VEHICLE_TYPE"));
+
+        //Adding row of table 'FloorRow' to list
+        colList.add(Column.getColumn("FloorRow", "ROW_ID"));
+        colList.add(Column.getColumn("FloorRow", "FLOOR_ID"));
+        colList.add(Column.getColumn("FloorRow", "ROW"));
 
         //Adding columns of table 'Block' to list
         colList.add(Column.getColumn("Block", "BLOCK"));
         colList.add(Column.getColumn("Block", "BLOCK_ID"));
 
-        //Adding columns of table 'Floor' to list
-        colList.add(Column.getColumn("Floor", "FLOOR"));
-        colList.add(Column.getColumn("Floor", "FLOOR_ID"));
-        colList.add(Column.getColumn("Floor", "VEHICLE_TYPE"));
+        //Adding places of table 'Place' to list
+        colList.add(Column.getColumn("Place", "PLACE_ID"));
+        colList.add(Column.getColumn("Place", "PLACE"));
+        colList.add(Column.getColumn("Place", "VEHICLE_NUMBER"));
+        colList.add(Column.getColumn("Place", "ENTRY_TIME"));
 
         sQuery.addSelectColumns(colList); //Adding columns to Select Query
         sQuery.setCriteria(criteria);      //Setting Criteria to Select Query
 
         //Adding Joins to Select Query
-        sQuery.addJoin(new Join("Floor", "Block", new String[]{"FLOOR_ID"}, new String[]{"FLOOR_ID"}, Join.INNER_JOIN));
+        sQuery.addJoin(new Join("Floor", "FloorRow", new String[]{"FLOOR_ID"}, new String[]{"FLOOR_ID"}, Join.INNER_JOIN));
+        sQuery.addJoin(new Join("FloorRow", "Block", new String[]{"ROW_ID"}, new String[]{"ROW_ID"}, Join.INNER_JOIN));
         sQuery.addJoin(new Join("Block", "Place", new String[]{"BLOCK_ID"}, new String[]{"BLOCK_ID"}, Join.INNER_JOIN));
 
         RelationalAPI rAPI = RelationalAPI.getInstance();
@@ -87,7 +92,12 @@ public class Amount extends HttpServlet {
         while (ds.next()){
             json = new JSONObject();
 
+            json.put("buildingName", ds.getValue("building_name"));
             json.put("floor", ds.getValue("floor"));
+            json.put("floorId", ds.getValue("floor_id"));
+            json.put("row", ds.getValue("row"));
+            json.put("rowId", ds.getValue("row_id"));
+            json.put("block", ds.getValue("block_id"));
             json.put("block", ds.getValue("block"));
             json.put("placeId", ds.getValue("place_id"));
             json.put("place", ds.getValue("place"));
